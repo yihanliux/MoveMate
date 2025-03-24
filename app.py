@@ -1460,14 +1460,14 @@ def analyze_video_orientation(orientation_segments):
     segment1 = ""
     segment2 = ""
     if standing_ratio > 0.8:
-        segment1 = "这个视频中大部分都是站立的动作，建议把播放设备放置在支架上。"
+        segment1 = "这个视频中大部分都是站立的动作，建议把播放设备放置在支架上。\n"
         segment2 = ("建议把播放设备放在如下图所示的位置。")
         image.append(1)
     elif transitions_count > 2 :
-        segment1 = "这个视频动作类型较为分散，可能需要多次调整播放设备"
+        segment1 = "这个视频动作类型较为分散，可能需要多次调整播放设备。"
     elif transitions_count == 1 :
         if store == 'high':
-            segment1 = "这个视频前期是站立动作，建议把播放设备放置在支架上。后期是非站立动作，建议把播放设备放置在地板上。"
+            segment1 = "这个视频前期是站立动作，建议把播放设备放置在支架上。后期是非站立动作，建议把播放设备放置在地板上。\n"
             if down_ratio > 0.8:
                 segment2 = ("建议把播放设备放在如下图所示的位置。")
                 image.append(1)
@@ -1477,7 +1477,7 @@ def analyze_video_orientation(orientation_segments):
                 image.append(1)
                 image.append(2)
         else:
-            segment1 = "这个视频前期是非站立动作，建议把播放设备放置在地板上。后期是站立动作，建议把播放设备放置在支架上。"
+            segment1 = "这个视频前期是非站立动作，建议把播放设备放置在地板上。后期是站立动作，建议把播放设备放置在支架上。\n"
             if down_ratio > 0.8:
                 segment2 = ("建议把播放设备放在如下图所示的位置。")
                 image.append(3)
@@ -1487,7 +1487,7 @@ def analyze_video_orientation(orientation_segments):
                 image.append(2)
                 image.append(1)
     else:
-        segment1 = "这个视频中大部分动作都是非站立动作，建议把播放设备放置在地板上。"
+        segment1 = "这个视频中大部分动作都是非站立动作，建议把播放设备放置在地板上。\n"
         if down_ratio > 0.8:
             segment2 = ("建议把播放设备放在如下图所示的位置。")
             image.append(3)
@@ -1549,47 +1549,47 @@ def get_video():
 
 @app.route("/check_status")
 def check_status():
-    frame_data_list, fps= generate_video(video_filename)
-    body_height, orientation, head_y = extract_data_from_frame_list(frame_data_list)
-    orientation = smooth_stable_data(orientation)
-    orientation_segments = first_orientation_segments(orientation, body_height, head_y, fps)
-    orientation_segments, orientation, body_height, head_y = filter_invalid_orientation_segments(orientation_segments, orientation, body_height, head_y, fps)
+    # frame_data_list, fps= generate_video(video_filename)
+    # body_height, orientation, head_y = extract_data_from_frame_list(frame_data_list)
+    # orientation = smooth_stable_data(orientation)
+    # orientation_segments = first_orientation_segments(orientation, body_height, head_y, fps)
+    # orientation_segments, orientation, body_height, head_y = filter_invalid_orientation_segments(orientation_segments, orientation, body_height, head_y, fps)
     
-    change_points = detect_change_points(body_height, visualize=False)
-    orientation_segments, orientation, body_height, head_y = remove_large_height_changes(change_points, orientation_segments, orientation, body_height, head_y, fps)
-    orientation_segments = merge_alternating_orients(orientation_segments, fps)
-    orientation_segments, orientation, body_height, head_y = merge_orientation_segments(orientation_segments, orientation, body_height, head_y, fps)
+    # change_points = detect_change_points(body_height, visualize=False)
+    # orientation_segments, orientation, body_height, head_y = remove_large_height_changes(change_points, orientation_segments, orientation, body_height, head_y, fps)
+    # orientation_segments = merge_alternating_orients(orientation_segments, fps)
+    # orientation_segments, orientation, body_height, head_y = merge_orientation_segments(orientation_segments, orientation, body_height, head_y, fps)
 
 
-    segmented_head_y = split_head_y_by_orientation(orientation_segments, head_y)
-    segmented_head_y, split_info = process_segmented_head_y(segmented_head_y)
-    print(split_info)
+    # segmented_head_y = split_head_y_by_orientation(orientation_segments, head_y)
+    # segmented_head_y, split_info = process_segmented_head_y(segmented_head_y)
+    # print(split_info)
 
-    periodics = []
-    means = []
-    amps = []
-    for segment in segmented_head_y:
-        segment = np.array(segment, dtype=float)
-        periodic, mean, amp = detect_periodicity_acf_with_peaks(segment)
-        if periodic:
-            if amp < 0.05:
-                periodic = False
-        periodics.append(periodic)
-        means.append(mean)
-        amps.append(amp)
+    # periodics = []
+    # means = []
+    # amps = []
+    # for segment in segmented_head_y:
+    #     segment = np.array(segment, dtype=float)
+    #     periodic, mean, amp = detect_periodicity_acf_with_peaks(segment)
+    #     if periodic:
+    #         if amp < 0.05:
+    #             periodic = False
+    #     periodics.append(periodic)
+    #     means.append(mean)
+    #     amps.append(amp)
     
-    orientation_segments = split_orientation_segments(orientation_segments, segmented_head_y, split_info)
-    print(periodics)
-    orientation_segments = update_orientation_segments(orientation_segments, periodics, means, amps)
+    # orientation_segments = split_orientation_segments(orientation_segments, segmented_head_y, split_info)
+    # print(periodics)
+    # orientation_segments = update_orientation_segments(orientation_segments, periodics, means, amps)
     
     image_path = os.path.join(UPLOAD_FOLDER, 'result_plot.png')
     
-    plot_orientation_segments(orientation_segments, image_path)
+    # plot_orientation_segments(orientation_segments, image_path)
 
-    summary_template, image = analyze_video_orientation(orientation_segments)
+    # summary_template, image = analyze_video_orientation(orientation_segments)
 
-    # summary_template = '1. Most of the actions in this video are non-standing, and it is recommended to place the playback device on the floor.\n 2. It is recommended to place the playback device in the position shown in the following figure.'
-    # image = [1, 2]
+    summary_template = '1. Most of the actions in this video are non-standing, and it is recommended to place the playback device on the floor.\n 2. It is recommended to place the playback device in the position shown in the following figure.'
+    image = [1]
 
     image_urls = {}
     image_urls[f"image_url"] = "/" + image_path if image_path else None
@@ -1611,7 +1611,9 @@ def check_status():
         "done": True,
         "result": summary_template,
     }
+
     response_data.update(image_urls)  # 添加图片 URL 键值对
+    print(response_data)
 
     # time.sleep(2)
 

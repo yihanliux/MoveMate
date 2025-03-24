@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 resultImage1.style.display = 'block';
 
                 const resultImage2 = document.getElementById("suggestion-image-2");
-                if (data.image_url_2 !== "None") {  // 确认 image_url_2 不是 None 或 null
+                if (data.image_url_2 != null) {  // 确认 image_url_2 不是 None 或 null
                     resultImage2.src = data.image_url_2;
                     resultImage2.style.display = 'block';
                 } else {
