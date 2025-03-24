@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoveMate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    maxWidth: {
+                    '8xl': '90rem',    // 1440px
+                    '9xl': '100rem',   // 1600px
+                    },
+                    colors: {
+                        primary: '#1a237e',
+                        secondary: '#ff6b6b'
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <style>
+        :where([class^="ri-"])::before { content: "\f3c2"; }
+        .video-container {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+        }
+        .chart-container {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+    </style>
+</head>
+
+
+<body class="bg-gray-50 min-h-screen">
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="font-['Pacifico'] text-2xl text-primary">MoveMate</a>
+                    <div class="ml-10 flex space-x-8">
+                        <a href="/" class="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium">How It Works<</a>
+                        <a href="/upload" class="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium">UPLOAD</a>
+                        <a href="/analysis" class="text-primary border-b-2 border-primary px-3 py-2 text-sm font-medium">ANALYSIS</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <main class="max-w-full mx-auto px-4 py-8">
+        <!-- 视频播放区域 -->
+        <div class="video-container rounded-lg shadow-lg p-8 mb-8">
+            <div class="max-w-3xl mx-auto">
+                <div class="relative aspect-video rounded-lg overflow-hidden flex items-center justify-center">
+                    <video id="videoPlayer" class="w-full h-full" controls>
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </div>
+    
+        <!-- 分析结果与加载状态区域 -->
+        <div class="chart-container">
+    
+            <!-- 加载中状态卡片 -->
+            <div id="loading-container" class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                <div class="loader"></div>
+                <p id="loading-text">Your video is being analyzed, please wait.</p>
+            </div>
+    
+            <!-- 加载完成后的结果区域 -->
+            <div id="result-container" style="display: none;">
+                <!-- 左侧：结果图片展示 -->
+                <div class="result-left bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <h1 class="text-3xl font-semibold text-gray-900 mb-8 text-center">Visualization of Analysis</h2>
+                    <img src="" alt="Result Image" id="result-image">
+                </div>
+    
+                <!-- 右侧：分析建议展示 -->
+                <div class="result-right bg-white rounded-lg shadow-lg p-8 mb-8 ml-auto">
+                    <h1 class="text-3xl font-semibold text-gray-900 mb-8 text-center">Suggestion</h1>
+                    <p id="result-text">Here is the analysis result of your video. It is very detailed and informative.</p>
+                    <div class="image-gallery">
+                        <img src="" alt="Suggestion Image 1" id="suggestion-image-1">
+                        <img src="" alt="Suggestion Image 2" id="suggestion-image-2">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="{{ url_for('static', filename='analysis.js') }}"></script>
+</body>
+</html>
+
+
+<style>
+    /* 加载文本样式 */
+    #loading-text {
+        font-size: 20px;
+        color: #1f2937;
+        text-align: center;
+        margin-top: 20px;
+        font-family: 'Segoe UI';
+    }
+
+    /* 加载中动画 */
+    .loader {
+        border: 8px solid #f3f3f3; 
+        border-top: 8px solid #1a237e; 
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+        background-color: #ffffff;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .result-left {
+        width: 70%;
+    }
+
+    .result-left img {
+        width: 100%;        
+        height: auto;        
+        object-fit: contain;  
+    }
+
+    .result-right {
+        width: 29%;
+    }
+
+    .result-right p {
+        font-size: 20px;
+        color: #1f2937;
+        text-align: center;
+        margin-top: 20px;
+        font-family: 'Segoe UI';
+        text-align: left;
+    }
+
+    .image-gallery {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+        padding-left: 20px;
+    }
+
+    .image-gallery img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+
+
+    <!-- <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="video-container rounded-lg shadow-lg p-8 mb-8">
+            <div class="max-w-3xl mx-auto">
+                <div class="relative aspect-video bg-black rounded-lg overflow-hidden">
+                    <video id="analysis-video" class="w-full h-full" controls>
+                        <source src="your-video-source.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-container rounded-lg shadow-lg p-8">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-6">Motion Analysis Results</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="h-[400px]" id="motionChart"></div>
+                
+                <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Analysis Summary</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <span class="flex items-center justify-center w-6 h-6 bg-primary text-white rounded-full text-sm mr-3">1</span>
+                            <p class="text-gray-700">Detected consistent movement patterns in upper body motion.</p>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="flex items-center justify-center w-6 h-6 bg-primary text-white rounded-full text-sm mr-3">2</span>
+                            <p class="text-gray-700">Average motion speed: 1.2 meters per second.</p>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="flex items-center justify-center w-6 h-6 bg-primary text-white rounded-full text-sm mr-3">3</span>
+                            <p class="text-gray-700">Peak acceleration observed at 2.5 seconds into the movement.</p>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="flex items-center justify-center w-6 h-6 bg-primary text-white rounded-full text-sm mr-3">4</span>
+                            <p class="text-gray-700">Motion smoothness score: 8.5/10 with suggested improvements for transitions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main> -->
+
+    <!-- <script>
+        const chart = echarts.init(document.getElementById('motionChart'));
+        const option = {
+            animation: false,
+            title: {
+                text: 'Motion Analysis Over Time',
+                textStyle: {
+                    color: '#1f2937'
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderColor: '#e5e7eb',
+                textStyle: {
+                    color: '#1f2937'
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['0s', '1s', '2s', '3s', '4s', '5s'],
+                axisLine: {
+                    lineStyle: {
+                        color: '#d1d5db'
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: {
+                    lineStyle: {
+                        color: '#d1d5db'
+                    }
+                }
+            },
+            series: [
+                {
+                    name: 'Motion Speed',
+                    type: 'line',
+                    smooth: true,
+                    data: [0.5, 1.2, 2.1, 1.8, 1.4, 0.9],
+                    lineStyle: {
+                        color: 'rgba(87, 181, 231, 1)'
+                    },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            {
+                                offset: 0,
+                                color: 'rgba(87, 181, 231, 0.3)'
+                            },
+                            {
+                                offset: 1,
+                                color: 'rgba(87, 181, 231, 0.1)'
+                            }
+                        ])
+                    }
+                }
+            ]
+        };
+        chart.setOption(option);
+        window.addEventListener('resize', () => {
+            chart.resize();
+        });
+    </script> -->

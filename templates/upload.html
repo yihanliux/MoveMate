@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoveMate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a237e',
+                        secondary: '#ff6b6b'
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <style>
+        :where([class^="ri-"])::before { content: "\f3c2"; }
+        .video-container {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+        }
+        .chart-container {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+    </style>
+</head>
+
+
+
+<body class="bg-gray-50 min-h-screen">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="font-['Pacifico'] text-2xl text-primary">MoveMate</a>
+                    <div class="ml-10 flex space-x-8">
+                        <a href="/" class="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium">How It Works</a>
+                        <a href="/upload" class="text-primary border-b-2 border-primary px-3 py-2 text-sm font-medium">UPLOAD</a>
+                        <a class="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium">ANALYSIS</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    
+    <!-- 上传页面主体 -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center">
+            <div class="bg-white rounded-lg shadow-lg p-12 w-full max-w-2xl">
+                <h1 class="text-3xl font-semibold text-gray-900 mb-4 text-center">Upload Videos</h1>
+                <p class="text-gray-600 text-center mb-8">Select a video file to start analysis.</p>
+                
+                <!-- 拖拽上传区域 -->
+                <div id="dropZone" class="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
+                    <div class="mb-6">
+                        <i class="ri-upload-cloud-2-line text-6xl text-gray-400"></i>
+                    </div>
+                    <button id="submitBtn" class="bg-primary text-white px-6 py-3 rounded-button font-medium hover:bg-primary/90 transition-colors mb-4">
+                        Upload Your Video
+                    </button>
+                    <p class="text-sm text-gray-500">or drop videos here</p>
+                    <input type="file" class="hidden" accept="video/*" id="video-upload">
+                </div>
+
+                <!-- 支持格式信息 -->
+                <div class="mt-8">
+                    <h3 class="text-sm font-medium text-gray-900 mb-2">Supported formats</h3>
+                    <p class="text-sm text-gray-500">MP4, MOV, AVI (max. 500MB)</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 上传逻辑脚本 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const uploadBtn = document.getElementById('submitBtn');
+            const fileInput = document.getElementById('video-upload');
+            const dropZone = document.getElementById('dropZone');
+
+            uploadBtn.addEventListener('click', () => fileInput.click());
+
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length > 0) uploadVideo(fileInput.files[0]);
+            });
+
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            dropZone.addEventListener('drop', (e) => {
+                const file = e.dataTransfer.files[0];
+                if (file) uploadVideo(file);
+            });
+
+            function uploadVideo(file) {
+                if (!file.type.startsWith('video/')) {
+                    showError('Please select a valid video file.');
+                    return;
+                }
+                if (file.size > 500 * 1024 * 1024) {
+                    showError('File size exceeds 500MB limit.');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("video", file);
+
+                fetch("/upload", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        window.location.href = "/analysis";
+                    } else {
+                        showError("Upload failed. Please try again.");
+                    }
+                })
+                .catch(() => showError("An error occurred while uploading."));
+            }
+
+            function showError(message) {
+                alert(message);
+            }
+        });
+    </script>
+</body>
+</html>

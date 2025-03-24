@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload Videos</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#1a237e',
+secondary: '#e53e3e'
+},
+borderRadius: {
+'none': '0px',
+'sm': '4px',
+DEFAULT: '8px',
+'md': '12px',
+'lg': '16px',
+'xl': '20px',
+'2xl': '24px',
+'3xl': '32px',
+'full': '9999px',
+'button': '8px'
+}
+}
+}
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+.video-container {
+background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+}
+.chart-container {
+background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+}
+</style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+<nav class="bg-white shadow-sm">
+<div class="max-w-7xl mx-auto px-4">
+<div class="flex justify-between h-16">
+<div class="flex items-center">
+<a href="#" class="font-['Pacifico'] text-2xl text-primary">logo</a>
+<div class="ml-10 flex space-x-8">
+<a href="#" class="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium">OVERVIEWS & DEMOS</a>
+<a href="#" class="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium">UPLOAD</a>
+<a href="#" class="text-primary border-b-2 border-primary px-3 py-2 text-sm font-medium">ANALYSIS</a>
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-primary">
+<i class="ri-search-line text-xl"></i>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-primary">
+<i class="ri-settings-3-line text-xl"></i>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-primary">
+<i class="ri-user-line text-xl"></i>
+</button>
+</div>
+</div>
+</div>
+</nav>
+<main class="max-w-7xl mx-auto px-4 py-8">
+<div class="min-h-[calc(100vh-4rem)] flex items-center justify-center">
+<div class="bg-white rounded-lg shadow-lg p-12 w-full max-w-2xl">
+<h1 class="text-3xl font-semibold text-gray-900 mb-4 text-center">Upload Videos</h1>
+<p class="text-gray-600 text-center mb-8">Select a video file to start analysis.</p>
+<div class="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
+<div class="mb-6">
+<i class="ri-upload-cloud-2-line text-6xl text-gray-400"></i>
+</div>
+<button class="bg-primary text-white px-6 py-3 rounded-button font-medium hover:bg-primary/90 transition-colors mb-4">
+Upload Your Video
+</button>
+<p class="text-sm text-gray-500">or drop videos here</p>
+<input type="file" class="hidden" accept="video/*" id="video-upload">
+</div>
+<div class="mt-8">
+<h3 class="text-sm font-medium text-gray-900 mb-2">Supported formats</h3>
+<p class="text-sm text-gray-500">MP4, MOV, AVI (max. 500MB)</p>
+</div>
+</div>
+</div>
+</main>
+<script>
+const uploadBtn = document.querySelector('button');
+const fileInput = document.getElementById('video-upload');
+const dropZone = document.querySelector('.border-dashed');
+uploadBtn.addEventListener('click', () => {
+fileInput.click();
+});
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+dropZone.addEventListener(eventName, preventDefaults, false);
+});
+function preventDefaults (e) {
+e.preventDefault();
+e.stopPropagation();
+}
+['dragenter', 'dragover'].forEach(eventName => {
+dropZone.addEventListener(eventName, highlight, false);
+});
+['dragleave', 'drop'].forEach(eventName => {
+dropZone.addEventListener(eventName, unhighlight, false);
+});
+function highlight(e) {
+dropZone.classList.add('border-primary');
+}
+function unhighlight(e) {
+dropZone.classList.remove('border-primary');
+}
+dropZone.addEventListener('drop', handleDrop, false);
+function handleDrop(e) {
+const dt = e.dataTransfer;
+const files = dt.files;
+handleFiles(files);
+}
+fileInput.addEventListener('change', function() {
+handleFiles(this.files);
+});
+function handleFiles(files) {
+const file = files[0];
+if (file && file.type.startsWith('video/')) {
+if (file.size <= 500 * 1024 * 1024) {
+// Handle video upload
+console.log('Uploading video:', file.name);
+} else {
+showError('File size exceeds 500MB limit');
+}
+} else {
+showError('Please select a valid video file');
+}
+}
+function showError(message) {
+const errorDiv = document.createElement('div');
+errorDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded';
+errorDiv.role = 'alert';
+errorDiv.innerHTML = message;
+document.body.appendChild(errorDiv);
+setTimeout(() => errorDiv.remove(), 3000);
+}
+</script>
+<script>
+const chart = echarts.init(document.getElementById('motionChart'));
+const option = {
+animation: false,
+title: {
+text: 'Motion Analysis Over Time',
+textStyle: {
+color: '#1f2937'
+}
+},
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(255, 255, 255, 0.9)',
+borderColor: '#e5e7eb',
+textStyle: {
+color: '#1f2937'
+}
+},
+xAxis: {
+type: 'category',
+data: ['0s', '1s', '2s', '3s', '4s', '5s'],
+axisLine: {
+lineStyle: {
+color: '#d1d5db'
+}
+}
+},
+yAxis: {
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#d1d5db'
+}
+}
+},
+series: [
+{
+name: 'Motion Speed',
+type: 'line',
+smooth: true,
+data: [0.5, 1.2, 2.1, 1.8, 1.4, 0.9],
+lineStyle: {
+color: 'rgba(87, 181, 231, 1)'
+},
+areaStyle: {
+color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+{
+offset: 0,
+color: 'rgba(87, 181, 231, 0.3)'
+},
+{
+offset: 1,
+color: 'rgba(87, 181, 231, 0.1)'
+}
+])
+}
+}
+]
+};
+chart.setOption(option);
+window.addEventListener('resize', () => {
+chart.resize();
+});
+</script>
+</body>
+</html>
