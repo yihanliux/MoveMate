@@ -697,7 +697,10 @@ def merge_alternating_orients(orientation_segments, fps=30, max_swaps=15, min_du
                 
                 # **如果交替切换次数超过 `max_swaps`，合并这些片段**
                 if swap_count > max_swaps:
-                    combined_orient = f"{current_orient}-{next_orient}"  # 组合方向
+                    if len(current_orient) > len(next_orient):
+                        combined_orient = f"{current_orient}-{next_orient}"
+                    else: 
+                        combined_orient = f"{next_orient}-{current_orient}"  # 组合方向
                     merged_segment = {
                         'orient': combined_orient,
                         'start_frame': combined_segments[0]['start_frame'],
@@ -1278,7 +1281,7 @@ def plot_orientation_segments(orientation_segments, save_path):
     try:
         # 读取图片
         # 读取图片
-        img_path = "full_body.png"
+        img_path = os.path.join(IMAGE_FOLDER, 'full_body.png') 
         img = Image.open(img_path)
         img_width, img_height = img.size
         aspect_ratio = img_width / img_height
@@ -1303,12 +1306,9 @@ def plot_orientation_segments(orientation_segments, save_path):
         # 'right': '#ffffb3',
         'up': '#fb8072',
         'down': '#bebada',
-        'down-neutral': '#fdb462',
         'neutral-down': '#fdb462',
-        'up-neutral': '#b3de69',
         'neutral-up': '#b3de69',
         'down-up': '#fccde5',
-        'up-down': '#fccde5'
     }
 
     # **遍历 orientation_segments，绘制 head_y 轨迹**
@@ -1364,23 +1364,20 @@ def plot_orientation_segments(orientation_segments, save_path):
         mid_y = max(y_values) + 0.01  # **让文本稍微高于曲线**
         if '-' in orient:  # 如果是连接词
             word1, word2 = orient.split('-')
-            # 判断较长的单词和较短的单词
-            if len(word1) >= len(word2):
-                plt.text(mid_x, mid_y + 0.03, word1, fontsize=10 , ha='center', va='bottom', color='black', fontfamily='Arial')
-                plt.text(mid_x, mid_y, f'&{word2}', fontsize=10, ha='center', va='bottom', color='black', fontfamily='Arial')
-            else:
-                plt.text(mid_x, mid_y + 0.03, word2, fontsize=10, ha='center', va='bottom', color='black', fontfamily='Arial')
-                plt.text(mid_x, mid_y, f'&{word1}', fontsize=10, ha='center', va='bottom', color='black', fontfamily='Arial')
+            plt.text(mid_x, mid_y + 0.03, word1, fontsize=10 , ha='center', va='bottom', color='black')
+            plt.text(mid_x, mid_y, f'&{word2}', fontsize=10, ha='center', va='bottom', color='black')
         else:  # 如果是单词
-            plt.text(mid_x, mid_y, orient, fontsize=10, ha='center', va='bottom', color='black', fontfamily='Arial')
+            plt.text(mid_x, mid_y, orient, fontsize=10, ha='center', va='bottom', color='black')
 
 
+     
     # **添加图例、标签、网格**
+    plt.rcParams['font.family'] = 'Segoe UI'
     plt.ylim(0, 1.1)
     plt.xlabel("Frame Index")
     plt.ylabel("Nose Height (Normalized)")
     plt.title("Nose Height and Facial Orientation Over Time")
-    plt.legend(prop={'family': 'Arial'})
+    plt.legend(loc='center left', bbox_to_anchor=(1.05, 0.5))
     plt.grid(True, linestyle='--', alpha=0.6)
 
     # 在左侧添加图片
@@ -1395,13 +1392,13 @@ def plot_orientation_segments(orientation_segments, save_path):
     plt.savefig(save_path)
     plt.close(fig)
 
-def analyze_video_orientation(orientation_segments):
+def analyze_video_orientation(orientation_segments, fps):
     total_frames = 0
     standing_frames = 0
-    up_frames = 0
     down_frames = 0
     transitions_count = 0  # Count of transitions
     total_low_frames = 0  # Total frames where head_y <= 0.6
+    store_frames = 0
 
     # Track the previous state (None means uninitialized)
     previous_state = None  # Can be 'high' (>0.8), 'low' (<0.6), or None
@@ -1425,28 +1422,25 @@ def analyze_video_orientation(orientation_segments):
                 standing_frames += duration_frames
             else:
                 current_state = 'low'
-            
-            if orient == 'up':
-                up_frames += duration_frames
-            elif orient == 'down':
-                down_frames += duration_frames
-
+                total_low_frames += duration_frames
+                if orient == 'down' or ('down' in orient.split('-')):
+                    down_frames += duration_frames
+                
         elif isinstance(head_y, list) and len(head_y) == 2:  # List of two values case
             if all(value > 0.6 for value in head_y):
                 current_state = 'high'
                 standing_frames += duration_frames
-            elif all(value < 0.6 for value in head_y):
+            else:
                 current_state = 'low'
-
-            if orient == 'up':
-                up_frames += duration_frames
-            elif orient == 'down':
-                down_frames += duration_frames
+                total_low_frames += duration_frames
+                if orient == 'down' or ('down' in orient.split('-')):
+                    down_frames += duration_frames
 
         # Check if there is a transition from high to low or low to high
         if previous_state and current_state and previous_state != current_state:
             transitions_count += 1
-            store = previous_state
+            store_state = previous_state
+            store_frames = total_frames
         # Update previous state
         if current_state:
             previous_state = current_state        
@@ -1463,11 +1457,12 @@ def analyze_video_orientation(orientation_segments):
         segment1 = "这个视频中大部分都是站立的动作，建议把播放设备放置在支架上。\n"
         segment2 = ("建议把播放设备放在如下图所示的位置。")
         image.append(1)
-    elif transitions_count > 2 :
+    elif transitions_count > 1 :
         segment1 = "这个视频动作类型较为分散，可能需要多次调整播放设备。"
     elif transitions_count == 1 :
-        if store == 'high':
-            segment1 = "这个视频前期是站立动作，建议把播放设备放置在支架上。后期是非站立动作，建议把播放设备放置在地板上。\n"
+        minutes = round(store_frames / fps / 60)
+        if store_state == 'high':
+            segment1 =  f"这个视频前{minutes}分钟是站立动作，建议把播放设备放置在支架上。后期是非站立动作，建议把播放设备放置在地板上。\n"
             if down_ratio > 0.8:
                 segment2 = ("建议把播放设备放在如下图所示的位置。")
                 image.append(1)
@@ -1477,7 +1472,7 @@ def analyze_video_orientation(orientation_segments):
                 image.append(1)
                 image.append(2)
         else:
-            segment1 = "这个视频前期是非站立动作，建议把播放设备放置在地板上。后期是站立动作，建议把播放设备放置在支架上。\n"
+            segment1 = f"这个视频前{minutes}是非站立动作，建议把播放设备放置在地板上。后期是站立动作，建议把播放设备放置在支架上。\n"
             if down_ratio > 0.8:
                 segment2 = ("建议把播放设备放在如下图所示的位置。")
                 image.append(3)
@@ -1502,10 +1497,10 @@ def analyze_video_orientation(orientation_segments):
 
     filtered_segments = {key: value for key, value in segments.items() if value}
 
-    # 自动生成的序号
-    summary_lines = [f"{index + 1}. {value}" for index, (key, value) in enumerate(filtered_segments.items())]
+    if len(filtered_segments) == 1:  # If only one segment is valid
+        return next(iter(filtered_segments.values())), image
 
-    summary = "".join(summary_lines)        
+    summary = "".join(filtered_segments.values())
 
     return summary, image
 
@@ -1515,6 +1510,10 @@ app = Flask(__name__)
 UPLOAD_FOLDER = "static/uploads"
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+
+IMAGE_FOLDER = "static/images"
+if not os.path.exists(IMAGE_FOLDER):
+    os.makedirs(IMAGE_FOLDER)
 
 video_filename = None
 
@@ -1563,7 +1562,6 @@ def check_status():
 
     # segmented_head_y = split_head_y_by_orientation(orientation_segments, head_y)
     # segmented_head_y, split_info = process_segmented_head_y(segmented_head_y)
-    # print(split_info)
 
     # periodics = []
     # means = []
@@ -1579,43 +1577,47 @@ def check_status():
     #     amps.append(amp)
     
     # orientation_segments = split_orientation_segments(orientation_segments, segmented_head_y, split_info)
-    # print(periodics)
     # orientation_segments = update_orientation_segments(orientation_segments, periodics, means, amps)
     
-    image_path = os.path.join(UPLOAD_FOLDER, 'result_plot.png')
+    image_path_1 = os.path.join(IMAGE_FOLDER, 'result_plot_1.png')
+    image_path_2 = os.path.join(IMAGE_FOLDER, 'result_plot_2.png')
     
-    # plot_orientation_segments(orientation_segments, image_path)
+    # plot_orientation_segments(orientation_segments, image_path_1)
+    # plot_orientation_bar_chart(orientation_segments, image_path_2)
+    # segments, image = analyze_video_orientation(orientation_segments, fps)
 
-    # summary_template, image = analyze_video_orientation(orientation_segments)
+    segments1 = {'Segment1': 'Height: > 2 Changes', 'Segment2': "Multiple adjustments to the playback device's height are required.", 'Segment3': 'Orientation: > 2 Changes', 'Segment4': "Multiple adjustments to the playback device's horizontal position are required."}
+    segments2 = {'Segment1': 'Height: 1 Change', 'Segment2': 'The first 2 minutes of this video consist of standing movements, so it is recommended to place the playback device on a stand. The later part features non-standing movements, for which it is advisable to place the playback device on the floor.', 'Segment3': 'Orientation: Long Edge Side', 'Segment4': 'It is recommended to place the device along the long edge of the yoga mat.'}
+    segments = {'Segment1': 'Height: > 2 Changes', 'Segment2': "Multiple adjustments to the playback device's height are required.", 'Segment3': 'Orientation: > 2 Changes', 'Segment4': "Multiple adjustments to the playback device's horizontal position are required."}
 
-    summary_template = '1. Most of the actions in this video are non-standing, and it is recommended to place the playback device on the floor.\n 2. It is recommended to place the playback device in the position shown in the following figure.'
-    image = [1]
+    image = [1,2]
 
     image_urls = {}
-    image_urls[f"image_url"] = "/" + image_path if image_path else None
-    image_urls["image_url_1"] = None
-    image_urls["image_url_2"] = None
+    image_urls[f"image_url_1"] = "/" + image_path_1 if image_path_1 else None
+    image_urls[f"image_url_2"] = "/" + image_path_2 if image_path_2 else None
+    image_urls["image_url1"] = None
+    image_urls["image_url2"] = None
     i = 1
     for index, img in enumerate(image, start=1):  # 从1开始编号
         if img == 1:
-            image_urls[f"image_url_{i}"] = "/" + os.path.join(UPLOAD_FOLDER, '1.png')
+            image_urls[f"image_url{i}"] = "/" + os.path.join(IMAGE_FOLDER, '1.png')
             i += 1
         elif img == 2:
-            image_urls[f"image_url_{i}"] = "/" + os.path.join(UPLOAD_FOLDER, '2.png')
+            image_urls[f"image_url{i}"] = "/" + os.path.join(IMAGE_FOLDER, '2.png')
             i += 1
         elif img == 3:
-            image_urls[f"image_url_{i}"] = "/" + os.path.join(UPLOAD_FOLDER, '3.png')
+            image_urls[f"image_url{i}"] = "/" + os.path.join(IMAGE_FOLDER, '3.png')
 
     # 构建返回的 JSON 数据
     response_data = {
-        "done": True,
-        "result": summary_template,
+        "done": True
     }
-
+    response_data.update(segments)
     response_data.update(image_urls)  # 添加图片 URL 键值对
-    print(response_data)
+    # print(response_data)
+    
 
-    # time.sleep(2)
+    # time.sleep(10)
 
     # 返回 JSON 数据
     return jsonify(response_data)
