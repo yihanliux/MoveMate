@@ -1586,9 +1586,9 @@ def check_status():
     # plot_orientation_bar_chart(orientation_segments, image_path_2)
     # segments, image = analyze_video_orientation(orientation_segments, fps)
 
-    segments1 = {'Segment1': 'Height: > 2 Changes', 'Segment2': "Multiple adjustments to the playback device's height are required.", 'Segment3': 'Orientation: > 2 Changes', 'Segment4': "Multiple adjustments to the playback device's horizontal position are required."}
-    segments2 = {'Segment1': 'Height: 1 Change', 'Segment2': 'The first 2 minutes of this video consist of standing movements, so it is recommended to place the playback device on a stand. The later part features non-standing movements, for which it is advisable to place the playback device on the floor.', 'Segment3': 'Orientation: Long Edge Side', 'Segment4': 'It is recommended to place the device along the long edge of the yoga mat.'}
     segments = {'Segment1': 'Height: > 2 Changes', 'Segment2': "Multiple adjustments to the playback device's height are required.", 'Segment3': 'Orientation: > 2 Changes', 'Segment4': "Multiple adjustments to the playback device's horizontal position are required."}
+    segments1 = {'Segment1': 'Height: 1 Change', 'Segment2': 'The first 2 minutes of this video consist of standing movements, so it is recommended to place the playback device on a stand. The later part features non-standing movements, for which it is advisable to place the playback device on the floor.', 'Segment3': 'Orientation: Long Edge Side', 'Segment4': 'It is recommended to place the device along the long edge of the yoga mat.'}
+    segments1 = {'Segment1': 'Height: > 2 Changes', 'Segment2': "Multiple adjustments to the playback device's height are required.", 'Segment3': 'Orientation: > 2 Changes', 'Segment4': "Multiple adjustments to the playback device's horizontal position are required."}
 
     image = [1,2]
 
