@@ -1590,7 +1590,7 @@ def check_status():
     segments1 = {'Segment1': 'Height: 1 Change', 'Segment2': 'The first 2 minutes of this video consist of standing movements, so it is recommended to place the playback device on a stand. The later part features non-standing movements, for which it is advisable to place the playback device on the floor.', 'Segment3': 'Orientation: Long Edge Side', 'Segment4': 'It is recommended to place the device along the long edge of the yoga mat.'}
     segments1 = {'Segment1': 'Height: > 2 Changes', 'Segment2': "Multiple adjustments to the playback device's height are required.", 'Segment3': 'Orientation: > 2 Changes', 'Segment4': "Multiple adjustments to the playback device's horizontal position are required."}
 
-    image = [1,2]
+    image = [1]
 
     image_urls = {}
     image_urls[f"image_url_1"] = "/" + image_path_1 if image_path_1 else None
@@ -1614,7 +1614,7 @@ def check_status():
     }
     response_data.update(segments)
     response_data.update(image_urls)  # 添加图片 URL 键值对
-    # print(response_data)
+    print(response_data)
     
 
     # time.sleep(10)

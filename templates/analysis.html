@@ -90,39 +90,19 @@
 
         <!-- 加载完成后的结果区域 -->
         <div id="result-container" style="display: none;">
-            <!-- 左侧：结果图片展示 -->
-            <div class="result-left bg-white rounded-lg shadow-lg px-4 py-8">
-                <h2 class="text-2xl font-semibold text-gray-900 mb-8">Visualization of Analysis</h2>
+            <div class="result-fig bg-white rounded-lg shadow-lg px-8 py-8">
+                <h2 class="title">Motion Analysis</h2>
                 <img src="" alt="Result Image 1" id="result-image-1">
-                <img src="" alt="Result Image 2" id="result-image-2">
-            </div>
 
-            <!-- 右侧：分析建议展示 -->
-            <div class="result-right bg-white rounded-lg shadow-lg px-4 py-8">
-                <h2 class="text-2xl font-semibold text-gray-900 mb-8">Suggestion</h2>
-                <div class="space-y-4">
-                    <div class="flex items-start">
-                        <img src="{{ url_for('static', filename='images/height.png') }}" id="step-1" class="w-10 h-10 rounded-full shrink-0">
-                        <p class="icon-gallery" id="icon1"></p>
+                <div class="result-content">
+                    <div class="result-left">
+                        <img src="" alt="Result Image 2" id="result-image-2">
                     </div>
-                    <p class="text-gray-700 flex-1 break-words" id="result-text1"></p>
-                    <div class="flex items-start"> 
-                        <img src="{{ url_for('static', filename='images/orientation.png') }}" id="step-2" class="w-10 h-10 rounded-full shrink-0 ">
-                        <p class="icon-gallery" id="icon2"></p>
+                    <div class="result-right">
+                        <img src="" alt="Result Image 3" id="result-image-3">
                     </div>
-                    <p class="text-gray-700 flex-1 break-words" id="result-text2"></p>
                 </div>
-                
-                <div class="image-gallery">
-                    <figure class="text-center">
-                        <img src="" alt="Suggestion Image 1" id="suggestion-image-1">
-                        <figcaption class="text-sm text-gray-500 mt-2">Long Edge Side</figcaption>
-                    </figure>
-                    <figure class="text-center">
-                        <img src="" alt="Suggestion Image 2" id="suggestion-image-2" >
-                        <figcaption class="text-sm text-gray-500 mt-2">Long Edge Side</figcaption>
-                    </figure>
-                </div>
+            </div>
             </div>
         </div>
     </main>
@@ -165,38 +145,44 @@
         width: 100%; /* 确保占满整个父容器的宽度 */
     }
 
+    .title {
+        padding-top: 5px;
+        font-size: 18px;
+        color: #4d4d4d;
+        font-weight: bold;
+    }
+
+    #result-image-1 {
+        width: 100%;
+        height: auto;
+        /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); */
+    }
+
+    .result-content {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 0px;
+    }
+
     .result-left {
         width: 70%;
     }
 
-    .result-left img{
-        width: 100%;
-        height: auto;
-    }
-
     .result-right {
-        width: 29%;
+        width: 30%;
     }
 
-    .icon-gallery {
-        padding-top: 5px;
-        font-size: 20px;
-        color: #1a237e;
-    }
-
-    .image-gallery {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-        margin-top: 20px;
-    }
-
-    .image-gallery img {
+    /* 确保图片不会超过容器的宽度或高度 */
+    .result-left img, .result-right img {
         width: 100%;
         height: auto;
-        border-radius: 8px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); */
     }
+
+
+
+
 </style>
 
 
