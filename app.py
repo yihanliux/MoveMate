@@ -1620,6 +1620,6 @@ def check_status():
     # 返回 JSON 数据
     return jsonify(response_data)
 
-if __name__ == "__main__":
-    app.run(debug=True)
+# if __name__ == "__main__":
+#     app.run(debug=True)
 
