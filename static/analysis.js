@@ -40,15 +40,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // 更新图片
                 const resultImage_1 = document.getElementById("result-image-1");
-                resultImage_1.src = data.image_url_1;
+                resultImage_1.src = data.up_image;
                 resultImage_1.style.display = 'block';
 
                 const leftImage = document.getElementById("result-image-2");
-                leftImage.src = data.image_url_2;
+                leftImage.src = data.left_image;
                 leftImage.style.display = 'block';
 
                 const rightImage = document.getElementById("result-image-3");
-                rightImage.src = data.image_url1;
+                rightImage.src = data.right_image;
                 rightImage.style.display = 'block';
 
 

@@ -1579,8 +1579,8 @@ def check_status():
     # orientation_segments = split_orientation_segments(orientation_segments, segmented_head_y, split_info)
     # orientation_segments = update_orientation_segments(orientation_segments, periodics, means, amps)
     
-    image_path_1 = os.path.join(IMAGE_FOLDER, 'result_plot_1.png')
-    image_path_2 = os.path.join(IMAGE_FOLDER, 'result_plot_2.png')
+    up_image = os.path.join(IMAGE_FOLDER, 'result_plot_1.png')
+    left_image = os.path.join(IMAGE_FOLDER, 'result_plot_2.png')
     
     # plot_orientation_segments(orientation_segments, image_path_1)
     # plot_orientation_bar_chart(orientation_segments, image_path_2)
@@ -1590,23 +1590,21 @@ def check_status():
     segments1 = {'Segment1': 'Height: 1 Change', 'Segment2': 'The first 2 minutes of this video consist of standing movements, so it is recommended to place the playback device on a stand. The later part features non-standing movements, for which it is advisable to place the playback device on the floor.', 'Segment3': 'Orientation: Long Edge Side', 'Segment4': 'It is recommended to place the device along the long edge of the yoga mat.'}
     segments1 = {'Segment1': 'Height: > 2 Changes', 'Segment2': "Multiple adjustments to the playback device's height are required.", 'Segment3': 'Orientation: > 2 Changes', 'Segment4': "Multiple adjustments to the playback device's horizontal position are required."}
 
-    image = [1]
+    img = 1
 
     image_urls = {}
-    image_urls[f"image_url_1"] = "/" + image_path_1 if image_path_1 else None
-    image_urls[f"image_url_2"] = "/" + image_path_2 if image_path_2 else None
-    image_urls["image_url1"] = None
-    image_urls["image_url2"] = None
-    i = 1
-    for index, img in enumerate(image, start=1):  # 从1开始编号
-        if img == 1:
-            image_urls[f"image_url{i}"] = "/" + os.path.join(IMAGE_FOLDER, '1.png')
-            i += 1
-        elif img == 2:
-            image_urls[f"image_url{i}"] = "/" + os.path.join(IMAGE_FOLDER, '2.png')
-            i += 1
-        elif img == 3:
-            image_urls[f"image_url{i}"] = "/" + os.path.join(IMAGE_FOLDER, '3.png')
+    image_urls[f"up_image"] = "/" + up_image if up_image else None
+    image_urls[f"left_image"] = "/" + left_image if left_image else None
+    image_urls[f"right_image"] = None
+    
+    if img == 1:
+        image_urls[f"right_image"] = "/" + os.path.join(IMAGE_FOLDER, '1.png')
+    elif img == 2:
+        image_urls[f"right_image"] = "/" + os.path.join(IMAGE_FOLDER, '2.png')
+    elif img == 3:
+        image_urls[f"right_image"] = "/" + os.path.join(IMAGE_FOLDER, '3.png')
+    elif img == 4:
+        image_urls[f"right_image"] = "/" + os.path.join(IMAGE_FOLDER, '4.png')
 
     # 构建返回的 JSON 数据
     response_data = {
