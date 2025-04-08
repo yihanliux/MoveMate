@@ -103,7 +103,17 @@
             const fileInput = document.getElementById('video-upload');
             const dropZone = document.getElementById('dropZone');
 
-            uploadBtn.addEventListener('click', () => fileInput.click());
+            uploadBtn.addEventListener('click', () => {
+                if (isAndroidWebView()) {
+                    if (window.AndroidUploader && window.AndroidUploader.chooseVideo) {
+                        window.AndroidUploader.chooseVideo();
+                    } else {
+                        showError("Android uploader not available");
+                    }
+                } else {
+                    fileInput.click();
+                }
+            });
 
             fileInput.addEventListener('change', () => {
                 if (fileInput.files.length > 0) uploadVideo(fileInput.files[0]);
@@ -154,6 +164,33 @@
             function showError(message) {
                 alert(message);
             }
+            
+            function isAndroidWebView() {
+                return /Android/i.test(navigator.userAgent) && /wv/.test(navigator.userAgent);
+            }
+
+            // 供 Android 原生回调使用
+            function uploadToBackendFromAndroid(base64Str) {
+                const blob = base64ToBlob(base64Str, 'video/mp4');
+                uploadVideo(blob);
+            }
+
+            function base64ToBlob(base64, mime) {
+                const byteCharacters = atob(base64);
+                const byteArrays = [];
+
+                for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+                    const slice = byteCharacters.slice(offset, offset + 512);
+                    const byteNumbers = new Array(slice.length);
+                    for (let i = 0; i < slice.length; i++) {
+                        byteNumbers[i] = slice.charCodeAt(i);
+                    }
+                    byteArrays.push(new Uint8Array(byteNumbers));
+                }
+
+                return new Blob(byteArrays, { type: mime });
+            }
+
         });
     </script>
 </body>
