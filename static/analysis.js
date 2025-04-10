@@ -27,7 +27,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.done) {
                 document.getElementById("loading-container").style.display = "none";
                 document.querySelector(".loader").style.display = "none";
-                document.getElementById('result-container').style.display = 'flex';
+                document.getElementById('result-container1').style.display = 'flex';
+                document.getElementById('result-container2').style.display = 'flex';
+
 
                 // const segment1 = data.Segment1;
                 // document.getElementById("icon1").innerHTML = segment1;

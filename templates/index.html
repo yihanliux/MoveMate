@@ -60,6 +60,7 @@
                         <a href="/" class="text-primary border-b-2 border-primary px-3 py-2 text-sm font-medium">HOW IT WORKS</a>
                         <a href="/upload" class="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium">UPLOAD</a>
                         <a class="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium">ANALYSIS</a>
+                        <a class="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium">LET'S WORKOUT</a>
                     </div>
                 </div>
             </div>
@@ -70,39 +71,31 @@
 <main class="max-w-7xl mx-auto px-4 py-8">
 <div class="min-h-[calc(100vh-4rem)]">
 <h1 class="text-3xl font-semibold text-gray-900 mb-8 text-center">How It Works</h1>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
     <div class="bg-white rounded-lg shadow-lg p-8 text-center">
         <div class="w-16 h-16 flex items-center justify-center mx-auto mb-6 bg-primary/10 rounded-full">
-            <i class="ri-upload-cloud-line text-3xl text-primary"></i>
+            <i class="ri-line-chart-line text-3xl text-primary"></i>
         </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-4">1. Upload Video</h3>
-        <p class="text-gray-600">Simply drag and drop your video file or click to upload. We support various formats, including MP4, MOV, and AVI, with a maximum file size of 500MB.</p>
+        <h3 class="text-xl font-semibold text-gray-900 mb-4">1. Upload and Analysis</h3>
+        <p class="text-gray-600">Upload a video of an instructor performing the workout. The system uses AI to analyze skeletal movements, generating line charts of nose height and face orientation, along with placement suggestions for the user’s mobile device.</p>
     </div>
     
     <div class="bg-white rounded-lg shadow-lg p-8 text-center">
         <div class="w-16 h-16 flex items-center justify-center mx-auto mb-6 bg-primary/10 rounded-full">
-            <i class="ri-magic-line text-3xl text-primary"></i>
+            <i class="ri-movie-ai-line text-3xl text-primary"></i>
         </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-4">2. AI Processing</h3>
-        <p class="text-gray-600">Our advanced AI algorithms will utilize MediaPipe's pose detection to analyze the facial orientation and nose height of the instructor in the video.</p>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-lg p-8 text-center">
-        <div class="w-16 h-16 flex items-center justify-center mx-auto mb-6 bg-primary/10 rounded-full">
-            <i class="ri-bar-chart-line text-3xl text-primary"></i>
-        </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-4">3. Get Insights</h3>
-        <p class="text-gray-600">The specific analysis results will be visualized in the form of charts, and we will provide you with suggestions based on the analysis findings.</p>
+        <h3 class="text-xl font-semibold text-gray-900 mb-4">2. Start Workout Mode</h3>
+        <p class="text-gray-600">After the analysis, users can enter workout mode. The video includes rhythm cues, movement comprehension aids, and transition prompts to help users efficiently stay in sync with the instructor.</p>
     </div>
 </div>
 
 <div class="bg-white rounded-lg shadow-lg p-8">
     <h2 class="text-2xl font-semibold text-gray-900 mb-6">Ready to Start?</h2>
     <div class="text-center">
-        <p class="text-gray-600 mb-6">Experience the power of AI-driven video analysis today.</p>
+        <p class="text-gray-600 mb-6">Upload a video to experience AI-powered motion analysis.</p>
         <a href="/upload">
             <button class="bg-primary text-white px-8 py-3 rounded-button font-medium hover:bg-primary/90 transition-colors">
-                Try It Now
+                Upload Video
             </button>
         </a>
     </div>
@@ -110,129 +103,137 @@
 </div>
 </main>
 <script>
-const uploadBtn = document.querySelector('button:not(:last-child)');
-const fileInput = document.getElementById('video-upload');
-const dropZone = document.querySelector('.border-dashed');
-const tryNowBtn = document.querySelector('button:last-child');
-tryNowBtn.addEventListener('click', () => {
-    window.location.href = 'upload.html';
-});
-uploadBtn.addEventListener('click', () => {
-fileInput.click();
-});
-['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-dropZone.addEventListener(eventName, preventDefaults, false);
-});
-function preventDefaults (e) {
-e.preventDefault();
-e.stopPropagation();
-}
-['dragenter', 'dragover'].forEach(eventName => {
-dropZone.addEventListener(eventName, highlight, false);
-});
-['dragleave', 'drop'].forEach(eventName => {
-dropZone.addEventListener(eventName, unhighlight, false);
-});
-function highlight(e) {
-dropZone.classList.add('border-primary');
-}
-function unhighlight(e) {
-dropZone.classList.remove('border-primary');
-}
-dropZone.addEventListener('drop', handleDrop, false);
-function handleDrop(e) {
-const dt = e.dataTransfer;
-const files = dt.files;
-handleFiles(files);
-}
-fileInput.addEventListener('change', function() {
-handleFiles(this.files);
-});
-function handleFiles(files) {
-const file = files[0];
-if (file && file.type.startsWith('video/')) {
-if (file.size <= 500 * 1024 * 1024) {
-// Handle video upload
-console.log('Uploading video:', file.name);
-} else {
-showError('File size exceeds 500MB limit');
-}
-} else {
-showError('Please select a valid video file');
-}
-}
-function showError(message) {
-const errorDiv = document.createElement('div');
-errorDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded';
-errorDiv.role = 'alert';
-errorDiv.innerHTML = message;
-document.body.appendChild(errorDiv);
-setTimeout(() => errorDiv.remove(), 3000);
-}
-</script>
-<script>
-const chart = echarts.init(document.getElementById('motionChart'));
-const option = {
-animation: false,
-title: {
-text: 'Motion Analysis Over Time',
-textStyle: {
-color: '#1f2937'
-}
-},
-tooltip: {
-trigger: 'axis',
-backgroundColor: 'rgba(255, 255, 255, 0.9)',
-borderColor: '#e5e7eb',
-textStyle: {
-color: '#1f2937'
-}
-},
-xAxis: {
-type: 'category',
-data: ['0s', '1s', '2s', '3s', '4s', '5s'],
-axisLine: {
-lineStyle: {
-color: '#d1d5db'
-}
-}
-},
-yAxis: {
-type: 'value',
-axisLine: {
-lineStyle: {
-color: '#d1d5db'
-}
-}
-},
-series: [
-{
-name: 'Motion Speed',
-type: 'line',
-smooth: true,
-data: [0.5, 1.2, 2.1, 1.8, 1.4, 0.9],
-lineStyle: {
-color: 'rgba(87, 181, 231, 1)'
-},
-areaStyle: {
-color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-{
-offset: 0,
-color: 'rgba(87, 181, 231, 0.3)'
-},
-{
-offset: 1,
-color: 'rgba(87, 181, 231, 0.1)'
-}
-])
-}
-}
-]
-};
-chart.setOption(option);
-window.addEventListener('resize', () => {
-chart.resize();
-});
+    const uploadBtn = document.querySelector('button:not(:last-child)');
+    const fileInput = document.getElementById('video-upload');
+    const dropZone = document.querySelector('.border-dashed');
+    const tryNowBtn = document.querySelector('button:last-child');
+
+    tryNowBtn.addEventListener('click', () => {
+        window.location.href = 'upload.html';
+    });
+
+    uploadBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        
+    });
+    function preventDefaults (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        dropZone.classList.add('border-primary');
+    }
+
+    function unhighlight(e) {
+        dropZone.classList.remove('border-primary');
+    }
+    
+    dropZone.addEventListener('drop', handleDrop, false);
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles(files);
+    }
+    fileInput.addEventListener('change', function() {
+        
+    });
+    function handleFiles(files) {
+        const file = files[0];
+        if (file && file.type.startsWith('video/')) {
+        if (file.size <= 500 * 1024 * 1024) {
+        // Handle video upload
+        console.log('Uploading video:', file.name);
+    } else {
+    showError('File size exceeds 500MB limit');
+    }
+    } else {
+    showError('Please select a valid video file');
+    }
+    }
+    function showError(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded';
+        errorDiv.role = 'alert';
+        errorDiv.innerHTML = message;
+        document.body.appendChild(errorDiv);
+        setTimeout(() => errorDiv.remove(), 3000);
+    }
+    </script>
+    <script>
+    const chart = echarts.init(document.getElementById('motionChart'));
+    const option = {
+    animation: false,
+    title: {
+    text: 'Motion Analysis Over Time',
+    textStyle: {
+    color: '#1f2937'
+    }
+    },
+    tooltip: {
+    trigger: 'axis',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: '#e5e7eb',
+    textStyle: {
+    color: '#1f2937'
+    }
+    },
+    xAxis: {
+    type: 'category',
+    data: ['0s', '1s', '2s', '3s', '4s', '5s'],
+    axisLine: {
+    lineStyle: {
+    color: '#d1d5db'
+    }
+    }
+    },
+    yAxis: {
+    type: 'value',
+    axisLine: {
+    lineStyle: {
+    color: '#d1d5db'
+    }
+    }
+    },
+    series: [
+    {
+    name: 'Motion Speed',
+    type: 'line',
+    smooth: true,
+    data: [0.5, 1.2, 2.1, 1.8, 1.4, 0.9],
+    lineStyle: {
+    color: 'rgba(87, 181, 231, 1)'
+    },
+    areaStyle: {
+    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+    {
+    offset: 0,
+    color: 'rgba(87, 181, 231, 0.3)'
+    },
+    {
+    offset: 1,
+    color: 'rgba(87, 181, 231, 0.1)'
+    }
+    ])
+    }
+    }
+    ]
+    };
+    chart.setOption(option);
+    window.addEventListener('resize', () => {
+    chart.resize();
+    });
 </script>
 </body>
 </html>

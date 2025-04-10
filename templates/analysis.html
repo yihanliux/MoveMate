@@ -63,6 +63,7 @@
                         <a href="/" class="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium">HOW IT WORKS</a>
                         <a href="/upload" class="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium">UPLOAD</a>
                         <a href="/analysis" class="text-primary border-b-2 border-primary px-3 py-2 text-sm font-medium">ANALYSIS</a>
+                        <a class="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium">LET'S WORKOUT</a>
                     </div>
                 </div>
             </div>
@@ -88,29 +89,45 @@
             <p id="loading-text">Your video is being analyzed, please wait.</p>
         </div>
 
+
+
         <!-- 加载完成后的结果区域 -->
-        <div id="result-container" style="display: none;">
-            <div class="result-fig bg-white rounded-lg shadow-lg px-8 py-8">
+        <div id="result-container1" style="display: none;">
+            <div id="result1-left" class="bg-white rounded-lg shadow-lg px-8 py-8">
                 <h2 class="title">Motion Analysis</h2>
                 <img src="" alt="Result Image 1" id="result-image-1">
-
-                <div class="result-content">
-                    <div class="result-left">
-                        <img src="" alt="Result Image 2" id="result-image-2">
-                    </div>
-                    <div class="result-right">
-                        <img src="" alt="Result Image 3" id="result-image-3">
-                    </div>
-                </div>
+                <img src="" alt="Result Image 2" id="result-image-2">
             </div>
+            <div id="result1-right" class="bg-white rounded-lg shadow-lg px-8 py-8">
+                <p class="text-gray-600 mb-6">
+                1. The nose height in the line chart is normalized by height; its relative position can be viewed via the silhouette on the right and the value on the left.<br />
+                2. The right side of the line chart shows the recommended placement height for mobile devices (e.g., tablets, phones).<br />
+                3. Labels below the line chart show the instructor's head orientations, along with their corresponding colors and proportions in the chart above.<br />
+                - Neutral: Face toward the camera<br />
+                - Down：Face toward the floor<br />
+                - Up：Face toward the ceiling<br />
+                - Neutral-Down：Indicates a transition between two states<br />
+                </p>
+            </div>
+        </div>
+
+        <div id="result-container2" style="display: none;">
+            <div id="result2-left" class="bg-white rounded-lg shadow-lg px-8 py-8 mt-4">
+                <img src="" alt="Result Image 3" id="result-image-3">
+            </div>
+            <div id="result2-right" class="bg-white rounded-lg shadow-lg px-8 py-8 mt-4">
+                <p class="text-gray-600 mb-6"> 1. This is a sentence.<br />
+                    2. This is also a sentence.</p>
             </div>
         </div>
 
 
-        <div class="bg-white rounded-lg shadow-lg p-8 mt-8">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-6">Ready to Start?</h2>
+
+        <div class="bg-white rounded-lg shadow-lg p-8 mt-4">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-6">Ready to move?</h2>
             <div class="text-center">
                 <a href="/upload">
+                    <p class="text-gray-600 mb-6">Follow along with smart, synchronized coaching.</p>
                     <button class="bg-primary text-white px-8 py-3 rounded-button font-medium hover:bg-primary/90 transition-colors">
                         Start Workout
                     </button>
@@ -155,7 +172,12 @@
         100% { transform: rotate(360deg); }
     }
 
-    #result-container {
+    #result-container1 {
+        display: flex;
+        justify-content: space-between; /* 两边对齐 */
+        width: 100%; /* 确保占满整个父容器的宽度 */
+    }
+    #result-container2 {
         display: flex;
         justify-content: space-between; /* 两边对齐 */
         width: 100%; /* 确保占满整个父容器的宽度 */
@@ -174,26 +196,31 @@
         /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); */
     }
 
-    .result-content {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        margin-top: 0px;
+    #result-image-2 {
+        width: 60%;
+        height: auto;
+        /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); */
     }
-
-    .result-left {
-        width: 70%;
-    }
-
-    .result-right {
-        width: 30%;
-    }
-
-    /* 确保图片不会超过容器的宽度或高度 */
-    .result-left img, .result-right img {
+    #result-image-3 {
         width: auto;
         height: auto;
         /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); */
+    }
+
+    #result1-left {
+        width: 70%;
+    }
+
+    #result2-left {
+        width: 70%;
+    }
+
+    #result1-right {
+        width: 29%;
+    }
+
+    #result2-right {
+        width: 29%;
     }
 
 
@@ -203,109 +230,4 @@
 
 
 
-    <!-- <main class="max-w-7xl mx-auto px-4 py-8">
-        <div class="video-container rounded-lg shadow-lg p-8 mb-8">
-            <div class="max-w-3xl mx-auto">
-                <div class="relative aspect-video bg-black rounded-lg overflow-hidden">
-                    <video id="analysis-video" class="w-full h-full" controls>
-                        <source src="your-video-source.mp4" type="video/mp4">
-                    </video>
-                </div>
-            </div>
-        </div>
-
-        <div class="chart-container rounded-lg shadow-lg p-8">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-6">Motion Analysis Results</h2>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="h-[400px]" id="motionChart"></div>
-                
-                <div class="bg-white rounded-lg p-6 shadow-sm">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Analysis Summary</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-start">
-                            <span class="flex items-center justify-center w-6 h-6 bg-primary text-white rounded-full text-sm mr-3">1</span>
-                            <p class="text-gray-700">Detected consistent movement patterns in upper body motion.</p>
-                        </div>
-                        <div class="flex items-start">
-                            <span class="flex items-center justify-center w-6 h-6 bg-primary text-white rounded-full text-sm mr-3">2</span>
-                            <p class="text-gray-700">Average motion speed: 1.2 meters per second.</p>
-                        </div>
-                        <div class="flex items-start">
-                            <span class="flex items-center justify-center w-6 h-6 bg-primary text-white rounded-full text-sm mr-3">3</span>
-                            <p class="text-gray-700">Peak acceleration observed at 2.5 seconds into the movement.</p>
-                        </div>
-                        <div class="flex items-start">
-                            <span class="flex items-center justify-center w-6 h-6 bg-primary text-white rounded-full text-sm mr-3">4</span>
-                            <p class="text-gray-700">Motion smoothness score: 8.5/10 with suggested improvements for transitions.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main> -->
-
-    <!-- <script>
-        const chart = echarts.init(document.getElementById('motionChart'));
-        const option = {
-            animation: false,
-            title: {
-                text: 'Motion Analysis Over Time',
-                textStyle: {
-                    color: '#1f2937'
-                }
-            },
-            tooltip: {
-                trigger: 'axis',
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                borderColor: '#e5e7eb',
-                textStyle: {
-                    color: '#1f2937'
-                }
-            },
-            xAxis: {
-                type: 'category',
-                data: ['0s', '1s', '2s', '3s', '4s', '5s'],
-                axisLine: {
-                    lineStyle: {
-                        color: '#d1d5db'
-                    }
-                }
-            },
-            yAxis: {
-                type: 'value',
-                axisLine: {
-                    lineStyle: {
-                        color: '#d1d5db'
-                    }
-                }
-            },
-            series: [
-                {
-                    name: 'Motion Speed',
-                    type: 'line',
-                    smooth: true,
-                    data: [0.5, 1.2, 2.1, 1.8, 1.4, 0.9],
-                    lineStyle: {
-                        color: 'rgba(87, 181, 231, 1)'
-                    },
-                    areaStyle: {
-                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                            {
-                                offset: 0,
-                                color: 'rgba(87, 181, 231, 0.3)'
-                            },
-                            {
-                                offset: 1,
-                                color: 'rgba(87, 181, 231, 0.1)'
-                            }
-                        ])
-                    }
-                }
-            ]
-        };
-        chart.setOption(option);
-        window.addEventListener('resize', () => {
-            chart.resize();
-        });
-    </script> -->
+    
