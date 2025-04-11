@@ -92,16 +92,17 @@
 
 
         <!-- 加载完成后的结果区域 -->
-        <div id="result-container1" style="display: none;">
-            <div id="result1-left" class="bg-white rounded-lg shadow-lg px-8 py-8">
-                <h2 class="title">Motion Analysis</h2>
-                <img src="" alt="Result Image 1" id="result-image-1">
-                <img src="" alt="Result Image 2" id="result-image-2">
+        <div id="result-container1" class="relative bg-white rounded-lg shadow-lg px-8 py-8" style="display: none;">
+            <!-- 左上角标题和问号 -->
+            <div class="relative flex items-center mb-4">
+                <h2 class="title mr-2">Motion Analysis</h2>
+                <i class="ri-information-line text-[#1a237e] text-xl cursor-pointer relative top-[3px]" id="tooltip-trigger"></i>
             </div>
-            <div id="result1-right" class="bg-white rounded-lg shadow-lg px-8 py-8">
-                <p class="text-gray-600 mb-6">
+
+        <!-- 小问号内容提示框 -->
+            <div id="tooltip-box" class="absolute top-full left-0 mt-2 bg-white text-sm text-gray-700 shadow-lg rounded-lg p-4 z-50 hidden w-80">
+                <p>
                 1. The nose height in the line chart is normalized by height; its relative position can be viewed via the silhouette on the right and the value on the left.<br />
-                2. The right side of the line chart shows the recommended placement height for mobile devices (e.g., tablets, phones).<br />
                 3. Labels below the line chart show the instructor's head orientations, along with their corresponding colors and proportions in the chart above.<br />
                 - Neutral: Face toward the camera<br />
                 - Down：Face toward the floor<br />
@@ -109,8 +110,16 @@
                 - Neutral-Down：Indicates a transition between two states<br />
                 </p>
             </div>
-        </div>
 
+        <!-- 图片部分：并排放置 -->
+            <div class="space-y-4">
+
+                <img src="" id="result-image-1" class="w-full">
+                <img src="" id="result-image-2" class="w-full">
+            </div>
+
+        </div>
+        
         <div id="result-container2" style="display: none;">
             <div id="result2-left" class="bg-white rounded-lg shadow-lg px-8 py-8 mt-4">
                 <img src="" alt="Result Image 3" id="result-image-3">
@@ -174,7 +183,7 @@
 
     #result-container1 {
         display: flex;
-        justify-content: space-between; /* 两边对齐 */
+        flex-direction: column; 
         width: 100%; /* 确保占满整个父容器的宽度 */
     }
     #result-container2 {
@@ -191,13 +200,13 @@
     }
 
     #result-image-1 {
-        width: 100%;
+        width:auto;
         height: auto;
         /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); */
     }
 
     #result-image-2 {
-        width: 60%;
+        width: auto;
         height: auto;
         /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); */
     }
@@ -207,26 +216,36 @@
         /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); */
     }
 
-    #result1-left {
-        width: 70%;
+    #tooltip-box {
+        top: 50px; /* 根据位置适配 */
+        left: 20px;
     }
 
     #result2-left {
-        width: 70%;
+        width: 49%;
     }
-
-    #result1-right {
-        width: 29%;
-    }
-
     #result2-right {
-        width: 29%;
+        width: 49%;
     }
-
-
-
-
 </style>
+
+<script>
+    const trigger = document.getElementById('tooltip-trigger');
+    const tooltip = document.getElementById('tooltip-box');
+  
+    // 切换显示
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation(); // 阻止事件冒泡
+      tooltip.classList.toggle('hidden');
+    });
+  
+    // 点击其他地方时隐藏
+    document.addEventListener('click', (e) => {
+      if (!tooltip.contains(e.target)) {
+        tooltip.classList.add('hidden');
+      }
+    });
+  </script>
 
 
 
