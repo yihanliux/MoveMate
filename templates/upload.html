@@ -100,6 +100,7 @@
     <!-- 上传逻辑脚本 -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+
             const uploadBtn = document.getElementById('submitBtn');
             const fileInput = document.getElementById('video-upload');
             const dropZone = document.getElementById('dropZone');
@@ -154,7 +155,11 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "success") {
-                        window.location.href = "/analysis";
+                        const toast = document.getElementById("success-toast");
+                        toast.classList.remove("hidden");
+                        setTimeout(() => {
+                            window.location.href = "/analysis";
+                        }, 3000);
                     } else {
                         showError("Upload failed. Please try again.");
                     }
@@ -194,5 +199,10 @@
 
         });
     </script>
+
+    <div id="success-toast" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary text-white px-8 py-3 rounded-button font-medium shadow-lg hidden transition-colors text-center text-base">
+        Upload successful! Redirecting to analysis page...
+    </div>
+  
 </body>
 </html>
