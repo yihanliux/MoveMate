@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MoveMate</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -120,14 +121,14 @@
 
         </div>
         
-        <div id="result-container2" style="display: none;">
-            <div id="result2-left" class="bg-white rounded-lg shadow-lg px-8 py-8 mt-4">
-                <img src="" alt="Result Image 3" id="result-image-3">
-            </div>
-            <div id="result2-right" class="bg-white rounded-lg shadow-lg px-8 py-8 mt-4">
-                <p class="text-gray-600 mb-6"> 1. This is a sentence.<br />
-                    2. This is also a sentence.</p>
-            </div>
+        <div id="result-container2" class="relative bg-white rounded-lg shadow-lg px-8 py-8" style="display: none;">
+            <model-viewer src="{{ url_for('static', filename='images/1.glb') }}"
+                          alt="3D model"
+                          auto-rotate
+                          camera-controls
+                          ar
+                          style="width: 100%; height: 500px;">
+            </model-viewer>
         </div>
 
 

@@ -136,6 +136,7 @@
             });
 
             function uploadVideo(file) {
+                
                 if (!file.type.startsWith('video/')) {
                     showError('Please select a valid video file.');
                     return;
@@ -144,6 +145,10 @@
                     showError('File size exceeds 500MB limit.');
                     return;
                 }
+
+                const toast = document.getElementById("success-toast");
+                toast.textContent = "Uploading video... Please wait.";  // 修改文字
+                toast.classList.remove("hidden");  // ⬅️ 上传一开始就显示
 
                 const formData = new FormData();
                 formData.append("video", file);
@@ -155,16 +160,19 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "success") {
-                        const toast = document.getElementById("success-toast");
-                        toast.classList.remove("hidden");
+                        toast.textContent = "Upload successful! Redirecting to analysis page..."; // ✅ 成功后改文字
                         setTimeout(() => {
                             window.location.href = "/analysis";
-                        }, 3000);
+                        }, 2000);
                     } else {
                         showError("Upload failed. Please try again.");
+                        toast.classList.add("hidden");
                     }
                 })
-                .catch(() => showError("An error occurred while uploading."));
+                .catch(() => {
+                    showError("An error occurred while uploading.");
+                    toast.classList.add("hidden");
+                });
             }
 
             function showError(message) {
