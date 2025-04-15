@@ -126,11 +126,10 @@
                             <i class="ri-bookmark-3-line text-primary text-xl mr-2 translate-y-[-1px]"></i>
                             <div>
                                 <p class="mb-1">Chart label meanings:</p>
-                                <ul class="list-disc list-inside space-y-1 pl-4">
+                                <ul id="label-meaning-list" class="list-disc list-inside space-y-1 pl-4">
                                     <li><strong>Neutral</strong>: Face toward the camera</li>
                                     <li><strong>Down</strong>: Face toward the floor</li>
-                                    <li><strong>Up</strong>: Face toward the ceiling</li>
-                                    <li><strong>Neutral-Down</strong>: Transition between two states</li>
+                                    <li><strong>Neutral-Down</strong>: Alternating between facing the camera and looking downward</li>
                                 </ul>
                             </div>
                         </div>
@@ -143,8 +142,8 @@
         <!-- 图片部分：并排放置 -->
             <div class="space-y-4">
 
-                <img src="" id="result-image-1" class="w-full">
-                <img src="" id="result-image-2" class="w-full">
+                <img src="/static/images/1_1.png" id="result-image-1" class="w-full">
+                <img src="/static/images/1_2.png" id="result-image-2" class="w-full">
             </div>
 
         </div>
@@ -317,30 +316,63 @@
     const glbButtons = document.querySelectorAll('.dot-glb-btn');
     const placementIcon = document.getElementById('placement-info-icon');
     const placementTooltip = document.getElementById('placement-tooltip');
+    const resultImg1 = document.getElementById('result-image-1');
+    const resultImg2 = document.getElementById('result-image-2');
+    const labelMeaningList = document.getElementById('label-meaning-list');
 
-    glbButtons.forEach(button => {
+    const labelMeanings = {
+        1: [
+            { label: 'Neutral', desc: 'Face toward the camera' },
+            { label: 'Down', desc: 'Face toward the floor' },
+            { label: 'Neutral-Down', desc: 'Alternating between facing the camera and looking downward' }
+        ],
+        2: [
+            { label: 'Down', desc: 'Face toward the floor' },
+            { label: 'Up', desc: 'Face toward the ceiling' }
+        ],
+        3: [
+            { label: 'Neutral', desc: 'Face toward the camera' },
+            { label: 'Down', desc: 'Face toward the floor' },
+            { label: 'Up', desc: 'Face toward the ceiling' }
+        ],
+        4: [
+            { label: 'Neutral', desc: 'Face toward the camera' },
+            { label: 'Down', desc: 'Face toward the floor' },
+            { label: 'Up', desc: 'Face toward the ceiling' }
+        ]
+    };
+
+    function updateLabelMeanings(version) {
+        const list = labelMeanings[version];
+        if (!list) return;
+        labelMeaningList.innerHTML = ''; // 清空原有内容
+        list.forEach(item => {
+            const li = document.createElement('li');
+            li.innerHTML = `<strong>${item.label}</strong>: ${item.desc}`;
+            labelMeaningList.appendChild(li);
+        });
+    }
+
+    glbButtons.forEach((button, index) => {
         button.addEventListener('click', () => {
-            const newSrc = button.getAttribute('data-src');
+            const version = index + 1;
+            const newSrc = `/static/images/${version}.glb`;
             modelViewer.setAttribute('src', newSrc);
 
-            if (newSrc.includes('4.glb')) {
+            // 更新图片路径
+            resultImg1.src = `/static/images/${version}_1.png`;
+            resultImg2.src = `/static/images/${version}_2.png`;
+
+            updateLabelMeanings(version);
+
+            // 控制 info 图标
+            if (version === 4) {
                 placementIcon.classList.remove('hidden');
             } else {
                 placementIcon.classList.add('hidden');
                 placementTooltip.classList.add('hidden');
             }
         });
-    });
-
-    placementIcon.addEventListener('click', (e) => {
-        e.stopPropagation();
-        placementTooltip.classList.toggle('hidden');
-    });
-
-    document.addEventListener('click', (e) => {
-        if (!placementTooltip.contains(e.target) && e.target !== placementIcon) {
-            placementTooltip.classList.add('hidden');
-        }
     });
 </script>
 

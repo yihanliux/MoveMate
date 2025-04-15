@@ -41,17 +41,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 // document.getElementById("result-text2").innerHTML = segment4;
 
                 // 更新图片
-                const resultImage_1 = document.getElementById("result-image-1");
-                resultImage_1.src = data.up_image;
-                resultImage_1.style.display = 'block';
+                // const resultImage_1 = document.getElementById("result-image-1");
+                // resultImage_1.src = data.up_image;
+                // resultImage_1.style.display = 'block';
 
-                const leftImage = document.getElementById("result-image-2");
-                leftImage.src = data.left_image;
-                leftImage.style.display = 'block';
+                // const leftImage = document.getElementById("result-image-2");
+                // leftImage.src = data.left_image;
+                // leftImage.style.display = 'block';
 
-                const rightImage = document.getElementById("result-image-3");
-                rightImage.src = data.right_image;
-                rightImage.style.display = 'block';
+                // const rightImage = document.getElementById("result-image-3");
+                // rightImage.src = data.right_image;
+                // rightImage.style.display = 'block';
 
 
             //     const resultImage1 = document.getElementById("suggestion-image-1");
