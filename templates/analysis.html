@@ -158,8 +158,9 @@
                 
                 <!-- 提示框 -->
                 <div id="placement-tooltip"
-                    class="absolute top-12 left-[20px] mt-2 bg-gray-50 text-sm text-gray-700 border border-gray-200 shadow-md rounded-lg p-4 z-50 w-64 hidden">
-                    Any position within the fan-shaped area is recommended — feel free to place it where you like!
+                    class="absolute top-12 left-[20px] mt-2 bg-gray-50 text-sm text-gray-700 border border-gray-200 shadow-md rounded-lg p-4 z-50 w-72 hidden">
+                    Any position along the edge of the fan-shaped area is recommended.
+
                 </div>
                 <model-viewer 
                     src="{{ url_for('static', filename='images/1.glb') }}"
@@ -373,6 +374,17 @@
                 placementTooltip.classList.add('hidden');
             }
         });
+    });
+
+    placementIcon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        placementTooltip.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!placementTooltip.contains(e.target) && e.target !== placementIcon) {
+            placementTooltip.classList.add('hidden');
+        }
     });
 </script>
 
