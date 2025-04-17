@@ -129,7 +129,7 @@
                                 <ul id="label-meaning-list" class="list-disc list-inside space-y-1 pl-4">
                                     <li><strong>Neutral</strong>: Face toward the camera</li>
                                     <li><strong>Down</strong>: Face toward the floor</li>
-                                    <li><strong>Neutral-Down</strong>: Alternating between facing the camera and looking downward</li>
+                                    <li><strong>Up</strong>: Face toward the ceiling</li>
                                 </ul>
                             </div>
                         </div>
@@ -150,17 +150,21 @@
         
         <div id="result-container2" class="relative bg-white rounded-lg shadow-lg px-8 py-8 mt-8 w-full" style="display: none;">
             <div class="flex flex-col space-y-4 w-full">
-                <div class="relative flex items-center mb-4">
-                    <h2 class="title mr-2">Device Placement Recommendations</h2>
-                    <i class="ri-information-line text-[#1a237e] text-xl cursor-pointer relative top-[3px] hidden"
-                       id="placement-info-icon"></i>
-                </div>
+                <div class="relative flex flex-col space-y-2 mb-4">
+                    <div class="flex items-center">
+                        <h2 class="title mr-2">Device Placement Recommendations</h2>
+                        <i class="ri-information-line text-[#1a237e] text-xl cursor-pointer" id="placement-info-icon"></i>
+                    </div>
                 
-                <!-- 提示框 -->
-                <div id="placement-tooltip"
-                    class="absolute top-12 left-[20px] mt-2 bg-gray-50 text-sm text-gray-700 border border-gray-200 shadow-md rounded-lg p-4 z-50 w-72 hidden">
-                    Any position along the edge of the fan-shaped area is recommended.
-
+                    <!-- 放到上面这块里面 -->
+                    <div id="placement-tooltip"
+                         class="absolute top-full left-0 mt-2 bg-gray-50 text-sm text-gray-700 border border-gray-200 shadow-md rounded-lg p-4 z-50 w-[700px] hidden">
+                         <ul id="label-meaning-list" class="list-disc list-inside space-y-1 pl-4">
+                            <li>The <strong>green curved area</strong> shows the recommended device placement zone.</li>
+                            <li>The illustrated dimensions reflect <strong>real-world scale</strong>, with the standing figure indicating the device height relative to the human body.</li>
+                            <li>The device is placed about <strong>one arm's length</strong> from the eyes of the lying person, ensuring optimal viewing distance.</li>
+                        </ul>
+                    </div>
                 </div>
                 <model-viewer 
                     src="{{ url_for('static', filename='images/1.glb') }}"
@@ -191,8 +195,6 @@
         <div class="flex justify-center space-x-2 mt-4">
             <button class="dot-glb-btn" data-src="/static/images/1.glb"></button>
             <button class="dot-glb-btn" data-src="/static/images/2.glb"></button>
-            <button class="dot-glb-btn" data-src="/static/images/3.glb"></button>
-            <button class="dot-glb-btn" data-src="/static/images/4.glb"></button>
         </div>
         
 
@@ -319,40 +321,7 @@
     const placementTooltip = document.getElementById('placement-tooltip');
     const resultImg1 = document.getElementById('result-image-1');
     const resultImg2 = document.getElementById('result-image-2');
-    const labelMeaningList = document.getElementById('label-meaning-list');
-
-    const labelMeanings = {
-        1: [
-            { label: 'Neutral', desc: 'Face toward the camera' },
-            { label: 'Down', desc: 'Face toward the floor' },
-            { label: 'Neutral-Down', desc: 'Alternating between facing the camera and looking downward' }
-        ],
-        2: [
-            { label: 'Down', desc: 'Face toward the floor' },
-            { label: 'Up', desc: 'Face toward the ceiling' }
-        ],
-        3: [
-            { label: 'Neutral', desc: 'Face toward the camera' },
-            { label: 'Down', desc: 'Face toward the floor' },
-            { label: 'Up', desc: 'Face toward the ceiling' }
-        ],
-        4: [
-            { label: 'Neutral', desc: 'Face toward the camera' },
-            { label: 'Down', desc: 'Face toward the floor' },
-            { label: 'Up', desc: 'Face toward the ceiling' }
-        ]
-    };
-
-    function updateLabelMeanings(version) {
-        const list = labelMeanings[version];
-        if (!list) return;
-        labelMeaningList.innerHTML = ''; // 清空原有内容
-        list.forEach(item => {
-            const li = document.createElement('li');
-            li.innerHTML = `<strong>${item.label}</strong>: ${item.desc}`;
-            labelMeaningList.appendChild(li);
-        });
-    }
+    
 
     glbButtons.forEach((button, index) => {
         button.addEventListener('click', () => {
@@ -364,15 +333,6 @@
             resultImg1.src = `/static/images/${version}_1.png`;
             resultImg2.src = `/static/images/${version}_2.png`;
 
-            updateLabelMeanings(version);
-
-            // 控制 info 图标
-            if (version === 4) {
-                placementIcon.classList.remove('hidden');
-            } else {
-                placementIcon.classList.add('hidden');
-                placementTooltip.classList.add('hidden');
-            }
         });
     });
 
@@ -386,6 +346,7 @@
             placementTooltip.classList.add('hidden');
         }
     });
+
 </script>
 
 
