@@ -95,16 +95,18 @@
         <!-- 加载完成后的结果区域 -->
         <div id="result-container1" class="relative bg-white rounded-lg shadow-lg px-8 py-8" style="display: none;">
             <!-- 左上角标题和问号 -->
-            <div class="relative flex items-center mb-4">
+            <div class="flex flex-col space-y-4 w-full">
+            <div class="relative flex flex-col space-y-2 mb-4">
+                <div class="flex items-center">
                 <h2 class="title mr-2">Motion Analysis</h2>
-                <i class="ri-information-line text-[#1a237e] text-xl cursor-pointer relative top-[3px]" id="tooltip-trigger"></i>
+                <i class="ri-information-line text-[#1a237e] text-xl cursor-pointer" id="tooltip-trigger"></i>
             </div>
 
         <!-- 小问号内容提示框 -->
         
     <!-- 图标 + 文本 -->
             <div id="tooltip-box"
-                class="absolute top-full left-0 mt-4 bg-gray-50 text-sm text-gray-700 border border-gray-200 shadow-md rounded-lg p-4 z-50 w-[700px] hidden">
+                class="absolute top-full left-0 mt-2 bg-white text-sm text-gray-700 border border-gray-200 shadow-md rounded-lg p-4 z-50 w-[700px] hidden">
                 
                 <div class="flex flex-col md:flex-row md:space-x-6">
                     
@@ -136,7 +138,8 @@
                     </div>
                 </div>
             </div>
-
+        </div>
+    </div>
 
 
         <!-- 图片部分：并排放置 -->
@@ -158,13 +161,42 @@
                 
                     <!-- 放到上面这块里面 -->
                     <div id="placement-tooltip"
-                         class="absolute top-full left-0 mt-2 bg-gray-50 text-sm text-gray-700 border border-gray-200 shadow-md rounded-lg p-4 z-50 w-[700px] hidden">
-                         <ul id="label-meaning-list" class="list-disc list-inside space-y-1 pl-4">
-                            <li>The <strong>green curved area</strong> shows the recommended device placement zone.</li>
-                            <li>The illustrated dimensions reflect <strong>real-world scale</strong>, with the standing figure indicating the device height relative to the human body.</li>
-                            <li>The device is placed about <strong>one arm's length</strong> from the eyes of the lying person, ensuring optimal viewing distance.</li>
-                        </ul>
-                    </div>
+     class="absolute top-full left-0 mt-2 bg-white text-sm text-gray-700 border border-gray-200 shadow-md rounded-lg p-4 z-50 w-[700px] hidden">
+
+    <div class="flex flex-col md:flex-row md:space-x-6">
+        
+        <!-- 左侧内容 -->
+        <div class="flex-1">
+            <div class="flex items-start mb-4">
+                <i class="ri-bookmark-3-line text-primary text-xl mr-2 translate-y-[-1px]"></i>
+                <div>
+                    <p class="mb-1">The <strong>green curved area</strong> shows the recommended device placement zone.</p>
+                </div>
+            </div>
+
+            <div class="flex items-start mb-4">
+                <i class="ri-ruler-line text-primary text-xl mr-2 translate-y-[-1px]"></i>
+                <div>
+                    <p class="mb-1">The illustrated dimensions reflect <strong>real-world scale</strong>, with the standing figure indicating the device height relative to the human body.</p>
+                    <img src="/static/images/placement-example-1.png" alt="Placement Example 1" class="mx-auto" style="width: auto; height: auto; max-width: none;">
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧内容 -->
+        <div class="flex-1">
+            <div class="flex items-start mb-4">
+                <i class="ri-ruler-line text-primary text-xl mr-2 translate-y-[-1px]"></i>
+                <div>
+                    <p class="mb-1">The device is placed about <strong>one arm's length</strong> from the eyes of the lying person, ensuring optimal viewing distance.</p>
+                    <p class="text-xs italic text-gray-600">*You can position the device on either the left or right side. For clarity, we have shown the left side only.*</p>
+                    <img src="/static/images/placement-example-2.png" alt="Placement Example 2" class="mx-auto" style="width: auto; height: auto; max-width: none;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
                 </div>
                 <model-viewer 
                     src="{{ url_for('static', filename='images/1.glb') }}"
@@ -270,9 +302,10 @@
     }
 
     #tooltip-box {
-        top: 50px; /* 根据位置适配 */
-        left: 20px;
-    }
+    top: 100%;
+    left: 0;
+    margin-top: 0.5rem; /* 等价于 mt-2 */
+}
 
     #result2-left {
         width: 49%;
