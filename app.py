@@ -1615,7 +1615,7 @@ def check_status():
     print(response_data)
     
 
-    # time.sleep(10)
+    time.sleep(10)
 
     # 返回 JSON 数据
     return jsonify(response_data)
